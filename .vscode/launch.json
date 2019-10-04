@@ -24,17 +24,6 @@
             ],
             "preLaunchTask": "Build debug",
             "miDebuggerPath": "/usr/bin/gdb"
-        },
-        {
-            "name": "Build release",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/release/main",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "Build release"
         }
     ]
 }
