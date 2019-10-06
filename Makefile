@@ -12,20 +12,20 @@ all: debug release
 
 debug: CXXFLAGS += -DDEBUG -g3
 debug: $(DBGDIR)/
-debug: $(DBGDIR)/main
+debug: $(DBGDIR)/single-thread
 
 release: CXXFLAGS += -O0
 release: $(RELDIR)/
-release: $(RELDIR)/main
+release: $(RELDIR)/single-thread
 
 
 $(DBGDIR)/%.o $(RELDIR)/%.o: %.cpp
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
-$(DBGDIR)/main: $(addprefix $(DBGDIR)/, $(OBJS) )
+$(DBGDIR)/single-thread: $(addprefix $(DBGDIR)/, $(OBJS) )
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
-$(RELDIR)/main: $(addprefix $(RELDIR)/, $(OBJS) )
+$(RELDIR)/single-thread: $(addprefix $(RELDIR)/, $(OBJS) )
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
 $(DBGDIR)/ $(RELDIR)/:
