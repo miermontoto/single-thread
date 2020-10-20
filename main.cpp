@@ -98,5 +98,9 @@ int main() {
 
 	// Display destination image
 	dstImage.display();
+	
+	// Free memory
+	free(pDstImage);
+
 	return 0;
 }
