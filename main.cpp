@@ -26,8 +26,8 @@ int main() {
 	uint width, height;
 	uint nComp;
 
-	srcImage.display(); // Muestra la imagen original.
-	aidImage.display(); // Muestra la imagen a mezclar.
+	//srcImage.display(); // Muestra la imagen original.
+	//aidImage.display(); // Muestra la imagen a mezclar.
 
 	// Se comprueba que las dimensiones de las dos imagenes sean iguales:
 	if(srcImage.width() != aidImage.width() && srcImage.height() != aidImage.height()) {
@@ -45,8 +45,6 @@ int main() {
 	 * (3) en caso de una imagen a color.
 	 * (4) en caso de una imagen a color CON transparencia.
 	 */
-
-
 
 	// Reservar espacio en memoria para la imagen resultante.
 	pDstImage = (data_t *) malloc (width * height * nComp * sizeof(data_t));
