@@ -15,28 +15,33 @@ using namespace cimg_library;
 typedef float data_t;
 
 const char* SOURCE_IMG      = "bailarina.bmp";
+const char* HELP_IMG        = "background_V.bmp"; // nombre de la imagen a mezclar
 const char* DESTINATION_IMG = "bailarina2.bmp";
 
 
 int main() {
 	// Open file and object initialization
 	CImg<data_t> srcImage(SOURCE_IMG);
+	CImg<data_t> aidImage(HELP_IMG);
 
 	data_t *pRsrc, *pGsrc, *pBsrc; // Pointers to the R, G and B components
+	data_t *pRaid, *pGaid, *pBaid;
 	data_t *pRdest, *pGdest, *pBdest;
 	data_t *pDstImage; // Pointer to the new image pixels
 	uint width, height; // Width and height of the image
 	uint nComp; // Number of image components
 
+	srcImage.display(); // Muestra la imagen original.
+	aidImage.display(); // Muestra la imagen a mezclar.
 
-	/***************************************************
-	 * TODO: Variables initialization.
-	 *   - Prepare variables for the algorithm
-	 *   - This is not included in the benchmark time
-	 */
+	// Se comprueba que las dimensiones de las dos imagenes sean iguales.s
+	if(srcImage.width() != aidImage.width() && srcImage.height() != aidImage.height()) {
+		perror("Images to blend don't have the same size.");
+		exit(1);
+	}
 
-	srcImage.display(); // Displays the source image
-	width  = srcImage.width(); // Getting information from the source image
+	// Almacenar dimensiones de la foto actual.
+	width  = srcImage.width();
 	height = srcImage.height();
 	nComp  = srcImage.spectrum(); // source image number of components
 				// Common values for spectrum (number of image components):
@@ -57,6 +62,11 @@ int main() {
 	pGsrc = pRsrc + height * width; // pGcomp points to the G component array
 	pBsrc = pGsrc + height * width; // pBcomp points to B component array
 
+	// Pointers to the componet arrays of the help image
+	pRaid = aidImage.data();
+	pGaid = pRaid + height * width;
+	pBaid = pGaid + height * width;
+
 	// Pointers to the RGB arrays of the destination image
 	pRdest = pDstImage;
 	pGdest = pRdest + height * width;
@@ -67,18 +77,19 @@ int main() {
 	 * TODO: Algorithm start.
 	 *   - Measure initial time
 	 */
-
-
-	/************************************************
-	 * FIXME: Algorithm.
-	 * In this example, the algorithm is a components swap
-	 *
-	 * TO BE REPLACED BY YOUR ALGORITHM
-	 */
-	for (uint i = 0; i < width * height; i++){
+	
+	for (uint i = 0; i < width * height; i++) {
+		// Algoritmo temporal
+		/*
 		*(pRdest + i) = *(pGsrc + i);  // This is equals to pRdest[i] = pGsrc[i]
 		*(pGdest + i) = *(pBsrc + i);
 		*(pBdest + i) = *(pRsrc + i);
+		*/
+
+		// Algoritmo real:
+		// Blend: blacken mode #12
+
+
 	}
 
 	/***********************************************
