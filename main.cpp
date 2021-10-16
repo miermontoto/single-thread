@@ -84,28 +84,32 @@ int main() {
 		exit(1);
 	}
 
-	for (uint i = 0; i < width * height; i++) {
+	// Se repite el algoritmo para entrar dentro del margen de tiempo establecido.
+	// Debería tardar entre 5 y 10 segundos en completarse.
+	for (uint repeticiones = 17; repeticiones > 0; repeticiones--) {
+		for (uint i = 0; i < width * height; i++) {
 
-		int red, blue, green; // se inicializan componentes temporales.
+			int red, blue, green; // se inicializan componentes temporales.
 
-		// Algoritmo real:
-		// Blend: blacken mode #12
-		red = 255 - ((256 * (255 - pRaid[i])) / (pRsrc[i] + 1));
-		green = 255 - ((256 * (255 - pGaid[i])) / (pGsrc[i] + 1));
-		blue = 255 - ((256 * (255 - pBaid[i])) / (pBsrc[i] + 1));
+			// Algoritmo real:
+			// Blend: blacken mode #12
+			red = 255 - ((256 * (255 - pRaid[i])) / (pRsrc[i] + 1));
+			green = 255 - ((256 * (255 - pGaid[i])) / (pGsrc[i] + 1));
+			blue = 255 - ((256 * (255 - pBaid[i])) / (pBsrc[i] + 1));
 
-		// Se comprueba que se hayan obtenido valores correctos y se truncan.
+			// Se comprueba que se hayan obtenido valores correctos y se truncan.
 
-		red = max(min(red, 255), 0);
-		green = max(min(green, 255), 0);
-		blue = max(min(blue, 255), 0);
+			red = max(min(red, 255), 0);
+			green = max(min(green, 255), 0);
+			blue = max(min(blue, 255), 0);
 
-		// Se aplican los cálculos a la imagen final.
+			// Se aplican los cálculos a la imagen final.
 
-		pRdest[i] = red;
-		pGdest[i] = green;
-		pBdest[i] = blue;
+			pRdest[i] = red;
+			pGdest[i] = green;
+			pBdest[i] = blue;
 
+		}
 	}
 
 	// Tiempo final
