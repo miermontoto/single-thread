@@ -2,7 +2,10 @@
 #include <math.h>
 #include <CImg.h>
 #include <time.h>
+#include <iostream>     // std::cout
+#include <algorithm>    // std::max
 
+using namespace std;
 using namespace cimg_library;
 
 // Data type for image components
@@ -82,18 +85,26 @@ int main() {
 	}
 
 	for (uint i = 0; i < width * height; i++) {
-		// Algoritmo temporal
-		/*
-		 *(pRdest + i) = *(pGsrc + i);  // This is equals to pRdest[i] = pGsrc[i]
-		 *(pGdest + i) = *(pBsrc + i);
-		 *(pBdest + i) = *(pRsrc + i);
-		*/
+
+		int red, blue, green; // se inicializan componentes temporales.
 
 		// Algoritmo real:
 		// Blend: blacken mode #12
-		pRdest[i]=255 - ((256*(255 - pRaid[i]))/(pRsrc[i]+1));
-		pGdest[i]=255 - ((256*(255 - pGaid[i]))/(pGsrc[i]+1));
-		pBdest[i]=255 - ((256*(255 - pBaid[i]))/(pBsrc[i]+1));
+		red = 255 - ((256 * (255 - pRaid[i])) / (pRsrc[i] + 1));
+		green = 255 - ((256 * (255 - pGaid[i])) / (pGsrc[i] + 1));
+		blue = 255 - ((256 * (255 - pBaid[i])) / (pBsrc[i] + 1));
+
+		// Se comprueba que se hayan obtenido valores correctos y se truncan.
+
+		red = max(min(red, 255), 0);
+		green = max(min(green, 255), 0);
+		blue = max(min(blue, 255), 0);
+
+		// Se aplican los cálculos a la imagen final.
+
+		pRdest[i] = red;
+		pGdest[i] = green;
+		pBdest[i] = blue;
 
 	}
 
