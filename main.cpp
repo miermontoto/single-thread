@@ -91,7 +91,9 @@ int main() {
 
 		// Algoritmo real:
 		// Blend: blacken mode #12
-
+		pRdest[i]=255 - ((256*(255 - pRaid[i]))/(pRsrc[i]+1));
+		pGdest[i]=255 - ((256*(255 - pGaid[i]))/(pGsrc[i]+1));
+		pBdest[i]=255 - ((256*(255 - pBaid[i]))/(pBsrc[i]+1));
 
 	}
 
