@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <CImg.h>
+#include <time.h>
 
 using namespace cimg_library;
 
@@ -25,6 +26,10 @@ int main() {
 	data_t *pDstImage; // Puntero a la imagen resultante.
 	uint width, height;
 	uint nComp;
+
+	// Variables de tiempo
+	struct timespec tStart, tEnd;
+	double dElapsedTimeS;
 
 	//srcImage.display(); // Muestra la imagen original.
 	//aidImage.display(); // Muestra la imagen a mezclar.
@@ -76,6 +81,13 @@ int main() {
 	 *   - Measure initial time
 	 */
 
+	// Tiempo inicial
+
+	if (clock_gettime(CLOCK_REALTIME, &tStart)==-1) {
+		printf("ERROR");
+		exit(EXIT_FAILURE);
+	}
+
 	for (uint i = 0; i < width * height; i++) {
 		// Algoritmo temporal
 		/*
@@ -95,6 +107,20 @@ int main() {
 	 *   - Measure the end time
 	 *   - Calculate the elapsed time
 	*/
+
+	// Tiempo final
+
+	if (clock_gettime(CLOCK_REALTIME, &tEnd)==-1){
+		printf("ERROR");
+		exit(EXIT_FAILURE);
+	}
+
+	// Calcular e imprimir tiempo de ejecución
+
+	dElapsedTimeS = (tEnd.tv_sec - tStart.tv_sec);
+	dElapsedTimeS += (tEnd.tv_nsec - tStart.tv_nsec) / 1e+9;
+
+	printf ("Tiempo de ejecución = %f\n", dElapsedTimeS);
 
 
 	CImg<data_t> dstImage(pDstImage, width, height, 1, nComp);
