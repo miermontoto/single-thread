@@ -27,7 +27,7 @@ int main() {
 	uint width, height;
 	uint nComp;
 
-	// Variables de tiempo
+	// Se inicializan las variables de tiempo
 	struct timespec tStart, tEnd;
 	double dElapsedTimeS;
 
@@ -75,17 +75,10 @@ int main() {
 	pGdest = pRdest + height * width; // componente verde
 	pBdest = pGdest + height * width; // componente azul
 
-
-	/***********************************************
-	 * TODO: Algorithm start.
-	 *   - Measure initial time
-	 */
-
 	// Tiempo inicial
-
 	if (clock_gettime(CLOCK_REALTIME, &tStart)==-1) {
-		printf("ERROR");
-		exit(EXIT_FAILURE);
+		printf("Error al obtener el tiempo inicial.");
+		exit(1);
 	}
 
 	for (uint i = 0; i < width * height; i++) {
@@ -102,26 +95,17 @@ int main() {
 
 	}
 
-	/***********************************************
-	 * TODO: End of the algorithm.
-	 *   - Measure the end time
-	 *   - Calculate the elapsed time
-	*/
-
 	// Tiempo final
-
 	if (clock_gettime(CLOCK_REALTIME, &tEnd)==-1){
-		printf("ERROR");
-		exit(EXIT_FAILURE);
+		printf("Error al obtener el tiempo final.");
+		exit(1);
 	}
 
 	// Calcular e imprimir tiempo de ejecución
-
 	dElapsedTimeS = (tEnd.tv_sec - tStart.tv_sec);
 	dElapsedTimeS += (tEnd.tv_nsec - tStart.tv_nsec) / 1e+9;
 
 	printf ("Tiempo de ejecución = %f\n", dElapsedTimeS);
-
 
 	CImg<data_t> dstImage(pDstImage, width, height, 1, nComp);
 
