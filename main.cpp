@@ -29,7 +29,7 @@ int main() {
 	data_t *pDstImage; // Puntero a la imagen resultante.
 	uint width, height;
 	uint nComp;
-
+	uint repeticiones = 17;
 	// Se inicializan las variables de tiempo
 	struct timespec tStart, tEnd;
 	double dElapsedTimeS;
@@ -86,7 +86,9 @@ int main() {
 
 	// Se repite el algoritmo para entrar dentro del margen de tiempo establecido.
 	// Debería tardar entre 5 y 10 segundos en completarse.
-	for (uint repeticiones = 17; repeticiones > 0; repeticiones--) {
+	while (repeticiones>0)
+	{
+		repeticiones--;
 		for (uint i = 0; i < width * height; i++) {
 
 			int red, blue, green; // se inicializan componentes temporales.
