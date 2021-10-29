@@ -5,107 +5,101 @@
 #include <iostream>     // std::cout
 #include <algorithm>    // std::max
 
-using namespace std;
+using namespace std; // this removes the need of writing "std::"" every time.
 using namespace cimg_library;
 
-// Data type for image components
-// FIXME: Change this type according to your group assignment
+#define R 17 // number of times the algorithm is repeated.
 typedef float data_t;
 
-const char* SOURCE_IMG      = "bailarina.bmp"; // nombre de la imagen que editar
-const char* HELP_IMG        = "background_V.bmp"; // nombre de la imagen a mezclar
-const char* DESTINATION_IMG = "result.bmp"; // nombre de la imagen resultante
+const char* SOURCE_IMG      = "bailarina.bmp"; // source image's file name.
+const char* HELP_IMG        = "background_V.bmp"; // aid image's file name.
+const char* DESTINATION_IMG = "result.bmp"; // resulting image's file name.
 
 
 int main() {
-	// Se inicializan los objetos principales y se abren las imágenes.
+	// Both the source image and the aid image are loaded.
 	CImg<data_t> srcImage(SOURCE_IMG);
 	CImg<data_t> aidImage(HELP_IMG);
 
 	// Se inicializan punteros y variables.
-	data_t *pRsrc, *pGsrc, *pBsrc; // Punteros a los componentes de la imagen original.
-	data_t *pRaid, *pGaid, *pBaid; // Punteros a los componentes de la imagen de apoyo.
-	data_t *pRdest, *pGdest, *pBdest; // Punteros a los componentes de la imagen resultante.
-	data_t *pDstImage; // Puntero a la imagen resultante.
+	data_t *pRsrc, *pGsrc, *pBsrc; // Source image's components' pointers.
+	data_t *pRaid, *pGaid, *pBaid; // Aid image's components' pointers.
+	data_t *pRdest, *pGdest, *pBdest; // Resulting image's components' pointers.
+	data_t *pDstImage; // Resulting image's pointer.
 	uint width, height;
 	uint nComp;
-	uint repeticiones = 17;
-	// Se inicializan las variables de tiempo
+
+	// Time variables are initialized
 	struct timespec tStart, tEnd;
 	double dElapsedTimeS;
 
-	//srcImage.display(); // Muestra la imagen original.
-	//aidImage.display(); // Muestra la imagen a mezclar.
-
-	// Se comprueba que las dimensiones de las dos imagenes sean iguales:
+	// The width and height of both images are checked to be equal.
 	if(srcImage.width() != aidImage.width() && srcImage.height() != aidImage.height()) {
 		perror("Images to blend don't have the same size.");
 		exit(1);
 	}
 
-	// Se almacena información sobre la foto original:
-	// Como se han comprobado las dimensiones, width y height son iguales para ambas imgs
+	// Certain information of the source image is stored:
+	// width and height should be equal for both images.
 	width  = srcImage.width();
 	height = srcImage.height();
-	nComp  = srcImage.spectrum(); // número de componentes en la imagen:
+	nComp  = srcImage.spectrum(); // number of image's components
 	/*
-	 * (1) en caso de una imagen en blanco y negro.
-	 * (3) en caso de una imagen a color.
-	 * (4) en caso de una imagen a color CON transparencia.
+	 * (1) if the image is in black and white.
+	 * (3) if it's a color image.
+	 * (4) if it's a color image WITH transparency values.
 	 */
 
-	// Reservar espacio en memoria para la imagen resultante.
+	// Allocate memory for the resulting image.
 	pDstImage = (data_t *) malloc (width * height * nComp * sizeof(data_t));
 	if (pDstImage == NULL) {
-		perror("Allocating destination image");
-		exit(-2);
-	}
-
-	// Inicialización de punteros a componentes:
-
-	// Punteros a la imagen original
-	pRsrc = srcImage.data();        // componente roja
-	pGsrc = pRsrc + height * width; // componente verde
-	pBsrc = pGsrc + height * width; // componente azul
-
-	// Punteros a la imagen de apoyo
-	pRaid = aidImage.data();        // componente roja
-	pGaid = pRaid + height * width; // componente verde
-	pBaid = pGaid + height * width; // componente azul
-
-	// Punteros a la imagen resultante
-	pRdest = pDstImage;               // componente roja
-	pGdest = pRdest + height * width; // componente verde
-	pBdest = pGdest + height * width; // componente azul
-
-	// Tiempo inicial
-	if (clock_gettime(CLOCK_REALTIME, &tStart)==-1) {
-		printf("Error al obtener el tiempo inicial.");
+		perror("Error: couldn't allocate memory for the destination image.");
 		exit(1);
 	}
 
-	// Se repite el algoritmo para entrar dentro del margen de tiempo establecido.
-	// Debería tardar entre 5 y 10 segundos en completarse.
-	while (repeticiones>0)
-	{
-		repeticiones--;
+	// pointer initialization:
+
+	// source image pointers
+	pRsrc = srcImage.data();        // red component
+	pGsrc = pRsrc + height * width; // green component
+	pBsrc = pGsrc + height * width; // blue component
+
+	// help image pointers
+	pRaid = aidImage.data();        // red component
+	pGaid = pRaid + height * width; // green component
+	pBaid = pGaid + height * width; // blue component
+
+	// destination image pointers
+	pRdest = pDstImage;               // red component
+	pGdest = pRdest + height * width; // green component
+	pBdest = pGdest + height * width; // blue component
+
+	// Starting time
+	if (clock_gettime(CLOCK_REALTIME, &tStart)==-1) {
+		printf("Error: couldn't obtain starting time");
+		exit(1);
+	}
+
+	// The algorithm repeats itself to be within time completition valid margins
+	// It should last between 5 and 10 seconds with this configuration.
+	for(int i = 0; i < R; i++) {
 		for (uint i = 0; i < width * height; i++) {
 
-			int red, blue, green; // se inicializan componentes temporales.
+			int red, blue, green; // temporal component initialization
 
-			// Algoritmo real:
+			// Algorithm
 			// Blend: blacken mode #12
 			red = 255 - ((256 * (255 - pRaid[i])) / (pRsrc[i] + 1));
 			green = 255 - ((256 * (255 - pGaid[i])) / (pGsrc[i] + 1));
 			blue = 255 - ((256 * (255 - pBaid[i])) / (pBsrc[i] + 1));
 
-			// Se comprueba que se hayan obtenido valores correctos y se truncan.
+			// Values are checked and trimmed.
 
 			red = max(min(red, 255), 0);
 			green = max(min(green, 255), 0);
 			blue = max(min(blue, 255), 0);
 
-			// Se aplican los cálculos a la imagen final.
+			// Results are added to the destination image.
 
 			pRdest[i] = red;
 			pGdest[i] = green;
@@ -114,13 +108,13 @@ int main() {
 		}
 	}
 
-	// Tiempo final
-	if (clock_gettime(CLOCK_REALTIME, &tEnd)==-1){
-		printf("Error al obtener el tiempo final.");
+	// Ending time 
+	if (clock_gettime(CLOCK_REALTIME, &tEnd) == -1){
+		printf("Error: couldn't obtain ending time");
 		exit(1);
 	}
 
-	// Calcular e imprimir tiempo de ejecución
+	// Print total execution time
 	dElapsedTimeS = (tEnd.tv_sec - tStart.tv_sec);
 	dElapsedTimeS += (tEnd.tv_nsec - tStart.tv_nsec) / 1e+9;
 
@@ -128,9 +122,9 @@ int main() {
 
 	CImg<data_t> dstImage(pDstImage, width, height, 1, nComp);
 
-	dstImage.save(DESTINATION_IMG);   // se guarda la foto
-	dstImage.display(); // se muestra la imagen resultante
-	free(pDstImage);    // se libera el espacio en memoria
+	dstImage.save(DESTINATION_IMG);   // the image is saved to file.
+	dstImage.display(); // the resulting image is shown on screen.
+	free(pDstImage);    // the memory used by the pointers is freed.
 
 	return 0;
 }
