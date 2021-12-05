@@ -2,6 +2,7 @@
 #include <math.h>
 #include <CImg.h>
 #include <time.h>
+#include <fstream>
 #include <iostream>     // std::cout
 #include <algorithm>    // std::max
 
@@ -17,6 +18,16 @@ const char* DESTINATION_IMG = "result.bmp"; // resulting image's file name.
 
 
 int main() {
+
+	// Check to see if both files to process actually exist.
+	std::ifstream file1(SOURCE_IMG);
+    std::ifstream file2(HELP_IMG);
+
+	if(!file1 || !file2) {
+		printf("Couldn't locate source and help images.\n");
+		exit(1);
+	}
+
 	// Both the source image and the aid image are loaded.
 	CImg<data_t> srcImage(SOURCE_IMG);
 	CImg<data_t> aidImage(HELP_IMG);
